@@ -13,8 +13,21 @@ int winAmt;
 bool done = false;
 bool validBet = false;
 
-void rules() {
-  system("clear");
+#ifdef _WIN32
+bool winCommands = true;
+#endif
+
+void rules()
+{
+  if (winCommands == true)
+  {
+    system("cls");
+  }
+  else
+  {
+    system("clear");
+  }
+
   cout << "\t\t======CASINO NUMBER GUESSING RULES!======\n";
   cout << "\t1. Choose a number between 1 to 10\n";
   cout << "\t2. Winner gets 10 times of the money bet\n";
@@ -23,7 +36,8 @@ void rules() {
   cout << "\t5. Enter 0 as a bet to quit\n\n";
 }
 
-int getBal() {
+int getBal()
+{
   cout << "Enter starting balance: ";
   cin >> bal;
   cout << "You need " << bal * 100 << " to win!" << endl;
@@ -31,17 +45,24 @@ int getBal() {
   return bal;
 }
 
-int getBet() {
-  while (!validBet) {
+int getBet()
+{
+  while (!validBet)
+  {
     cout << "Enter bet: ";
     cin >> bet;
-    if (bet > bal) {
+    if (bet == 0)
+    {
+      exit(1);
+    }
+    if (bet > bal)
+    {
       cout << "Bet was greater than your balance, please enter an amount less "
               "than or equal to your balance"
            << endl;
-    } else if (bet == 0) {
-      system("quit");
-    } else {
+    }
+    else
+    {
       break;
     }
   }
@@ -49,38 +70,57 @@ int getBet() {
   return bet;
 }
 
-bool guessNum() {
+bool guessNum()
+{
   realNum = rand() % 10 + 1;
   cout << realNum << endl;
   cout << "Guess the number between 1 and 10: ";
   cin >> guess;
-  if (guess == realNum) {
+  if (guess == realNum)
+  {
     return true;
   }
   return false;
 }
 
-int main() {
+int main()
+{
+  cout << winCommands << endl;
   srand(time(NULL));
   rules();
   getBal();
-  while (bal < winAmt || bal <= 0) {
+  while (bal < winAmt || bal <= 0)
+  {
     sleep(5);
-    system("clear");
+
+    if (winCommands)
+    {
+      system("cls");
+    }
+    else
+    {
+      system("clear");
+    }
     getBet();
-    if (guessNum()) {
+    if (guessNum())
+    {
       cout << "Correct!" << endl;
       cout << bet * 10 << endl;
       bal = bet * 10 + bal;
       cout << "New balance: " << bal << endl;
-    } else {
+    }
+    else
+    {
       cout << "Incorrect, the real number was: " << realNum << endl;
       cout << "New balance: " << bal << endl;
     }
   }
-  if (bal <= 0) {
+  if (bal <= 0)
+  {
     cout << "You went bankrupt" << endl;
-  } else {
+  }
+  else
+  {
     cout << "You cleaned house!" << endl;
   }
   return 0;
